@@ -1,0 +1,51 @@
+explain SELECT  DISTINCT "ledgerid","postingid"
+FROM    bucardo.delta_public_ledger_posting d
+WHERE   NOT EXISTS (
+           SELECT 1
+           FROM   bucardo.track_public_ledger_posting t
+           WHERE  d.txntime = t.txntime
+           AND    (t.target = 'dbgroup sync_ledger_postings_v2_2'::text)
+        )
+;
+
+HashAggregate  (cost=20521.41..20552.58 rows=3117 width=16)
+  Group Key: d.ledgerid, d.postingid
+  ->  Nested Loop Anti Join  (cost=0.50..20505.62 rows=3158 width=16)
+        Join Filter: (d.txntime = t.txntime)
+        ->  Seq Scan on delta_public_ledger_posting d  (cost=0.00..20408.16 rows=6316 width=24)
+        ->  Materialize  (cost=0.50..2.72 rows=1 width=8)
+              ->  Index Only Scan using dex3_public_ledger_posting on track_public_ledger_posting t  (cost=0.50..2.72 rows=1 width=8)
+                    Index Cond: (target = 'dbgroup sync_ledger_postings_v2_2'::text)
+
+
+--
+--
+--
+
+
+clearing=> explain DELETE FROM bucardo.track_public_clearance_messages
+clearing-> WHERE NOT EXISTS (
+clearing(> SELECT 1 FROM bucardo.delta_public_clearance_messages d WHERE d.txntime = bucardo.track_public_clearance_messages.txntime );
+                                                                       QUERY PLAN
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+ Delete on track_public_clearance_messages  (cost=0.72..2542988.07 rows=86587037 width=12)
+   ->  Merge Anti Join  (cost=0.72..2542988.07 rows=86587037 width=12)
+         Merge Cond: (track_public_clearance_messages.txntime = d.txntime)
+         ->  Index Scan using track_public_clearance_messages_txntime on track_public_clearance_messages  (cost=0.57..2326361.56 rows=86587920 width=14)
+         ->  Index Scan using dex1_public_clearance_messages on delta_public_clearance_messages d  (cost=0.15..145.75 rows=890 width=14)
+(5 rows)
+
+
+--
+--
+--
+
+explain INSERT INTO bucardo.track_public_ledger_posting (txntime,target)
+SELECT DISTINCT txntime, 'dbgroup sync_ledger_postings_v2_2'::text
+FROM bucardo.delta_public_ledger_posting d
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM   bucardo.track_public_ledger_posting t
+    WHERE  d.txntime = t.txntime
+    AND    (t.target = 'dbgroup sync_ledger_postings_v2_2'::text)
+);
