@@ -1,5 +1,4 @@
 -- unused indexes in a database
-
 SELECT
     now(),
     schemaname || '.' || relname AS table,

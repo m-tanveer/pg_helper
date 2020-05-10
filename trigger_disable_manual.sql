@@ -1,5 +1,3 @@
-
-
 -- disbaled triggers
 select 'ALTER TABLE ' || n.nspname || '.' || t.tgrelid::regclass || ' ENABLE TRIGGER ' || t.tgname || ';'
 from pg_catalog.pg_trigger t
