@@ -26,7 +26,10 @@ WHERE now() - query_start > '3 MINUTES'::INTERVAL
 ORDER BY (now() - query_start)::time(0) DESC;
 
 --  terminate the long running (> 3mins)
-SELECT  pg_terminate_backend(pid) FROM pg_stat_activity WHERE now() - query_start > '3 MINUTES'::INTERVAL ORDER BY (now() - query_start)::time(0) DESC;
+SELECT  pg_terminate_backend(pid)
+FROM pg_stat_activity 
+WHERE now() - query_start > '3 MINUTES'::INTERVAL
+ORDER BY (now() - query_start)::time(0) DESC;
 
 -- to set connection limit to a database
 ALTER DATABASE ledger CONNECTION LIMIT 30 ;

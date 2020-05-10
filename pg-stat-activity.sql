@@ -156,4 +156,8 @@ and pid <> pg_backend_pid()
 and now() - query_start > '0.1 seconds'::INTERVAL
 
 
-select pid, pg_terminate_backend(pid) as termination_state from pg_stat_activity where state='idle' and now() - query_start > '180 SECOND'::INTERVAL and pid <> pg_backend_pid();
+select pid, pg_terminate_backend(pid) as termination_state
+from pg_stat_activity
+where state='idle'
+and now() - query_start > '180 SECOND'::INTERVAL
+and pid <> pg_backend_pid();
