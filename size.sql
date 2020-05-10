@@ -10,7 +10,6 @@ ORDER BY pg_database_size(d.datname) DESC;
 -- Schema Size
 SELECT schemaname, pg_size_pretty(SUM(pg_total_relation_size(quote_ident(schemaname) || '.' || quote_ident(tablename)))::BIGINT) FROM pg_tables group by schemaname ORDER BY SUM(pg_total_relation_size(quote_ident(schemaname) || '.' || quote_ident(tablename))) DESC ;
 
-
 -- total table size including index
 select pg_size_pretty(pg_total_relation_size(cx_table_name)) ;
 
@@ -38,7 +37,7 @@ WHERE relkind='r'
 ORDER BY pg_total_relation_size(pg_class.oid) DESC
 LIMIT 20;
 
--- table size ( Total Size ) -- in bytes 
+-- table size ( Total Size ) -- in bytes
 SELECT relnamespace::regclass,
   relname,
   pg_relation_size(pg_class.oid, 'main') as main,

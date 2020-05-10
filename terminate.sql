@@ -1,4 +1,4 @@
--- queries > 3 minutes
+s-- queries > 3 minutes
 SELECT now()::date AS date,
     now()::time(0) AS time,
     pg_terminate_backend(pid),
