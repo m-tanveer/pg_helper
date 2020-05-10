@@ -1,3 +1,4 @@
+-- aurora bug 
 create or replace function subtxn(cnt int) returns int as $$
 BEGIN
 FOR i IN 1 .. cnt LOOP

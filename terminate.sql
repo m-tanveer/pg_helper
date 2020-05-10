@@ -1,6 +1,3 @@
-
-
-
 -- queries > 3 minutes
 SELECT now()::date AS date,
     now()::time(0) AS time,
