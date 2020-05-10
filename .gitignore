@@ -1,6 +1,0 @@
-# ignore files from the current repo
-# command to remove files already pushed to remote repo
-# git rm --cached amq.sql
-amq.sql
-nilenso.sql
-script_to_reproduce_the_bug.sql 
